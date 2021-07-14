@@ -242,7 +242,7 @@
       enable = GM_getValue('enable');
       debug = GM_getValue('debug');
     }
-    menu_feedBack_ID = GM_registerMenuCommand('💬 反馈 & 建议 [Github]', function () {window.GM_openInTab('https://github.com/XIU2/UserScript', {active: true,insert: true,setParent: true});});
+    menu_feedBack_ID = GM_registerMenuCommand('💬 反馈 & 建议 [Github]', function () {window.GM_openInTab('https://github.com/ACG-Q/script/issues/1', {active: true,insert: true,setParent: true});});
     menu_enable_toggle_ID = GM_registerMenuCommand(`🔄 ${enable?'开启':'关闭'} 自动回复 - 点击切换`,  menu_enable_toggle);
     menu_debug_toggle_ID = GM_registerMenuCommand(`🔄 ${debug?'开启':'关闭'} 调试 - 点击切换`,  menu_debug_toggle);
   }
