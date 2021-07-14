@@ -68,7 +68,8 @@
     function menu_debug_toggle(){
         debug = GM_getValue('debug');
         GM_setValue('debug', !debug);
-        notification.text = `已${debug?'关闭':'开启'} 调试`
+        debug = GM_getValue('debug');
+        notification.text = `已${debug?'开启':'关闭'} 调试`
         GM_notification(notification); // 提示消息
         registerMenuCommand(); // 重新注册脚本菜单
     }
