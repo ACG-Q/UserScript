@@ -21,6 +21,8 @@
     var notification = {text: "", title:`${GM_info.script.name}`, image:`${GM_info.script.icon}`, timeout: 3000};
     var debug = GM_getValue('debug'), menu_debug_toggle_ID, menu_feedBack_ID;
     registerMenuCommand();
+  
+    console.log(`-->${GM_info.script.name} 脚本启动<--`);
 
     let formulaButton = document.querySelector("[valign='middle']>b")
     if(formulaButton){
@@ -61,15 +63,14 @@
             GM_unregisterMenuCommand(menu_feedBack_ID);
             debug = GM_getValue('debug');
         }
-        menu_feedBack_ID = GM_registerMenuCommand('💬 反馈 & 建议 [Github]', function () {window.GM_openInTab('https://github.com/ACG-Q/script/issues/1', {active: true,insert: true,setParent: true});});
+        menu_feedBack_ID = GM_registerMenuCommand('💬 反馈 & 建议 [Github]', function () {window.GM_openInTab('https://github.com/ACG-Q/script/issues/2', {active: true,insert: true,setParent: true});});
         menu_debug_toggle_ID = GM_registerMenuCommand(`🔄 ${debug?'开启':'关闭'} 调试 - 点击切换`,  menu_debug_toggle);
     }
     // 切换事件
     function menu_debug_toggle(){
         debug = GM_getValue('debug');
         GM_setValue('debug', !debug);
-        debug = GM_getValue('debug');
-        notification.text = `已${debug?'开启':'关闭'} 调试`
+        notification.text = `已${debug?'关闭':'开启'} 调试`
         GM_notification(notification); // 提示消息
         registerMenuCommand(); // 重新注册脚本菜单
     }
