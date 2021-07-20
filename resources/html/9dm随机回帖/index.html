@@ -1,0 +1,54 @@
+<!--
+ * @Author: 六记
+ * @Date: 2021-07-20 09:29:22
+ * @LastEditTime: 2021-07-20 09:30:00
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: index.html
+-->
+<div id="app">
+    <el-page-header @back="goBack" content="🧰 快捷评论管理">
+    </el-page-header>
+    <template>
+        <el-table :data="tableData" style="width: 100%" max-height="400px" stripe="true">
+            <el-table-column label="序号" width="50">
+                <template slot-scope="scope">
+                    <p>{{ scope.$index + 1 }}</p>
+                </template>
+            </el-table-column>
+            <el-table-column label="💬 评论" width="200">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                        <p>评论信息: {{ scope.row }}</p>
+                        <div slot="reference" class="name-wrapper">
+                            <el-tag size="medium">{{ scope.row }}</el-tag>
+                        </div>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column label="⚙️ 操作">
+                <template slot-scope="scope">
+                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"><i class="el-icon-edit"></i>编辑
+                    </el-button>
+                    <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)"><i
+                            class="el-icon-close"></i>删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        </el-scrollbar>
+        <br />
+        <el-row>
+            <el-button type="primary" icon="el-icon-plus" circle @click="addMsg()"></el-button>
+            <el-button type="danger" icon="el-icon-refresh" circle @click="resetMsg()"></el-button>
+        </el-row>
+        <br />
+        <el-row :gutter="20">
+            <el-col :span="18">
+                <el-input placeholder="http://加载评论 暂时不可用" v-model="input" disabled clearable></el-input>
+            </el-col>
+            <el-col :span="2">
+                <el-button type="primary" disabled>加载</el-button>
+            </el-col>
+        </el-row>
+    </template>
+</div>
