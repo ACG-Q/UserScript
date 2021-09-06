@@ -85,8 +85,3 @@
 > 下载合集时会提示
 > ![image-20210731181113848](images/image-20210731181113848.png)
 > 点击允许即可
-
-## Notion's preview
-
-[六记のBlog for Notion](https://ancient-range-c4d.notion.site/Blog-043421aa960340f2ad86f4a0d880cb62)
-
