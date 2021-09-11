@@ -5,6 +5,7 @@
 |                  | [9dm每天计算](./『分类』论坛辅助/9dm自动填写计算.user.js)    | 功能: <br/>1. 自动填写计算验证码<br/>[使用方法](#9dm每天计算) | [📥油猴](https://greasyfork.org/scripts/429363-9dm自动填写计算/code/9dm自动填写计算.user.js) \|[📥备用](https://cdn.jsdelivr.net/gh/ACG-Q/UserScript@main/『分类』论坛辅助/9dm自动填写计算.user.js) |
 | 『分类』下载辅助 |                                                              |                                                              |                                                              |
 |                  | [Steam创意工坊mod下载工具](./『分类』下载辅助/Steam创意工坊mod下载工具.user.js) | 功能: <br/>1. 下载单个创意工坊的MOD<br/>2. 下载创意工坊的MOD合集(多个MOD)<br />[使用方法](#Steam创意工坊mod下载工具) | 📥油猴 \|[📥备用](https://cdn.jsdelivr.net/gh/ACG-Q/UserScript@main/『分类』下载辅助/Steam创意工坊mod下载工具.user.js) |
+|                  | [图库下载.user.js](./『分类』下载辅助/图库下载.user.js)      | 功能: <br/>1. 去登录弹窗广告<br/>2. 下载图片(非原图)<br />[使用方法](#图库下载) | 📥油猴 \|[📥备用](https://cdn.jsdelivr.net/gh/ACG-Q/UserScript@main/『分类』下载辅助/图库下载.user.js) |
 
 ## 🚩使用方法
 
@@ -79,3 +80,15 @@
 > 下载合集时会提示
 > ![image-20210731181113848](images/image-20210731181113848.png)
 > 点击允许即可
+
+<h3 id="图库下载">图库下载</h3>
+
+> 目前支持了[IC千库网](https://588ku.com/ )
+
+#### 脚本HTML样式
+
+![image-20210911211612849](images/image-20210911211612849.png)
+
+#### 脚本使用方法
+
+点击`免VIP下载`按钮即可, 进行下载
