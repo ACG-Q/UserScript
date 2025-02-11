@@ -8,7 +8,7 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
-  'use strict';
+(function () {
+  "use strict";
   console.log("这是一个示例脚本！");
 })();

@@ -1,0 +1,13 @@
+[
+  {
+    "name": "示例脚本",
+    "namespace": "http://tampermonkey.net/",
+    "version": "1.0",
+    "description": "示例脚本描述",
+    "author": "Your Name",
+    "match": "https://example.com/*",
+    "grant": "none",
+    "id": "scripts\\example",
+    "filePath": "scripts\\example.user.js"
+  }
+]

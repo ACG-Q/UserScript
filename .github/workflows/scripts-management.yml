@@ -10,17 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: 检出代码仓库
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Cache Node Modules
+      - name: 缓存 Node 模块
         uses: actions/cache@v4
         with:
           path: node_modules
@@ -28,36 +28,23 @@ jobs:
           restore-keys: |
             node-modules-
 
-      - name: Install Dependencies
+      - name: 安装依赖
         run: |
           npm install
-          npm install -g prettier eslint eslint-plugin-prettier eslint-config-prettier ejs
 
-      - name: Lint Scripts
+      - name: 构建
         run: |
-          npx eslint scripts/*.js
+          npm run build
 
-      - name: Auto Format Scripts
-        run: |
-          npx prettier --write scripts/*
-
-      - name: Extract Metadata
-        run: |
-          node extract-metadata.js
-
-      - name: Generate Page
-        run: |
-          node generate-page.js
-
-      - name: Commit Changes
+      - name: 提交更改
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add metadata.json page/index.html page/style.css page/script.js
-          git commit -m "Update metadata and page" || exit 0
+          git commit -m "更新元信息和页面" || exit 0
           git push origin main
 
-      - name: Deploy to GitHub Pages
+      - name: 部署到 GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
