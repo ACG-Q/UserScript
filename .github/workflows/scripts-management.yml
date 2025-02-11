@@ -31,7 +31,7 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
-          npm install -g prettier eslint eslint-plugin-prettier eslint-config-prettier
+          npm install -g prettier eslint eslint-plugin-prettier eslint-config-prettier ejs
 
       - name: Lint Scripts
         run: |
