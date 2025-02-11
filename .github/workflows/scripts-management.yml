@@ -40,7 +40,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add metadata.json page/index.html page/style.css page/script.js
+          git add .*
           git commit -m "更新元信息和页面" || exit 0
           git push origin main
 
