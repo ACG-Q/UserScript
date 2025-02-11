@@ -25,6 +25,21 @@ h1 {
   margin-bottom: 20px;
 }
 
+.search-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #3498db;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-box:focus {
+  border-color: #2980b9;
+}
+
 /* Table Styles */
 table {
   width: 100%;
@@ -54,6 +69,20 @@ tr:hover {
   background-color: #f1f1f1;
 }
 
+.icon {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.description {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .download-link {
   color: #3498db;
   text-decoration: none;
@@ -65,15 +94,18 @@ tr:hover {
   color: #2980b9;
 }
 
-.description {
-  max-width: 300px; /* 限制 Description 列的宽度 */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
-  vertical-align: middle;
+/* Responsive Design */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .search-box {
+    width: 90%;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+  }
 }
