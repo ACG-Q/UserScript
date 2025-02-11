@@ -5,6 +5,12 @@ const ejs = require('ejs');
 
 const template = readFileSync(resolve('page', 'index.ejs'), 'utf-8');
 
+function urlResolve(baseUrl, filePath) {
+  const cleanBaseUrl = baseUrl.replace(/\/+$/, '');
+  const cleanFilePath = filePath.replace(/^\//, '');
+  return `${cleanBaseUrl}/${cleanFilePath}`;
+}
+
 const renderPage = (metadata) => {
   try {
     const scripts = metadata.map((script) => ({
@@ -12,7 +18,7 @@ const renderPage = (metadata) => {
       description: script.description,
       author: script.author,
       version: script.version,
-      downloadLink: resolve(process.env.GITHUB_RAW_URL || "", script.filePath),
+      downloadLink: urlResolve(process.env.GITHUB_RAW_URL || "", script.filePath),
     }));
 
     return ejs.render(template, { scripts });
