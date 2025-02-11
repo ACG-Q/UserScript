@@ -15,64 +15,83 @@
 // @description 9大妈自动计算并填写
 // ==/UserScript==
 
-(function() {
-    'use strict';
+(function () {
+  "use strict";
 
-    var notification = {text: "", title:`${GM_info.script.name}`, image:`${GM_info.script.icon}`, timeout: 3000};
-    var debug = GM_getValue('debug'), menu_debug_toggle_ID, menu_feedBack_ID;
-    registerMenuCommand();
-  
-    console.log(`-->${GM_info.script.name} 脚本启动<--`);
+  var notification = {
+    text: "",
+    title: `${GM_info.script.name}`,
+    image: `${GM_info.script.icon}`,
+    timeout: 3000,
+  };
+  var debug = GM_getValue("debug"),
+    menu_debug_toggle_ID,
+    menu_feedBack_ID;
+  registerMenuCommand();
 
-    let formulaButton = document.querySelector("[valign='middle']>b")
-    if(formulaButton){
-        try{
-            debugging("-->获取获取算式<--");
-            let formula = formulaButton.innerText;
-            formula = formula.replace("?","");
-            formula = formula.replace(new RegExp(/( )/g),"");
-            formula = formula.replace("=","");
-            debugging(`-->获取算式成功: ${formula}<--`);
-            debugging("-->字符串转换算式<--");
-            let value = eval(formula);
-            debugging(`-->计算成功, 算式值: ${value}<--`);
-            let inputButton = document.querySelector("input[name='answer']");
-            inputButton.value = value;
-            let submitButton = document.querySelector("input[name='secqsubmit']");
-            debugging("-->验证完毕<--");
-            submitButton.click();
-        }catch(err){
-            console.log(`-->计算失败, 失败原因: ${err}<--`);
-        }
+  console.log(`-->${GM_info.script.name} 脚本启动<--`);
+
+  let formulaButton = document.querySelector("[valign='middle']>b");
+  if (formulaButton) {
+    try {
+      debugging("-->获取获取算式<--");
+      let formula = formulaButton.innerText;
+      formula = formula.replace("?", "");
+      formula = formula.replace(new RegExp(/( )/g), "");
+      formula = formula.replace("=", "");
+      debugging(`-->获取算式成功: ${formula}<--`);
+      debugging("-->字符串转换算式<--");
+      let value = eval(formula);
+      debugging(`-->计算成功, 算式值: ${value}<--`);
+      let inputButton = document.querySelector("input[name='answer']");
+      inputButton.value = value;
+      let submitButton = document.querySelector("input[name='secqsubmit']");
+      debugging("-->验证完毕<--");
+      submitButton.click();
+    } catch (err) {
+      console.log(`-->计算失败, 失败原因: ${err}<--`);
     }
+  }
 
-    // 打印调试信息
-    function debugging(str){
-        debug = GM_getValue('debug');
-        if(debug){
-            console.log(str)
-        }
+  // 打印调试信息
+  function debugging(str) {
+    debug = GM_getValue("debug");
+    if (debug) {
+      console.log(str);
     }
+  }
 
-    // -------- 脚本菜单-----------
-    debugging("-->创建脚本菜单<--");
-    // 注册脚本菜单
-    function registerMenuCommand() {
-        if (menu_feedBack_ID || menu_debug_toggle_ID){ // 如果反馈菜单ID不是 null，则删除所有脚本菜单
-            GM_unregisterMenuCommand(menu_debug_toggle_ID);
-            GM_unregisterMenuCommand(menu_feedBack_ID);
-            debug = GM_getValue('debug');
-        }
-        menu_feedBack_ID = GM_registerMenuCommand('💬 反馈 & 建议 [Github]', function () {window.GM_openInTab('https://github.com/ACG-Q/script/issues/2', {active: true,insert: true,setParent: true});});
-        menu_debug_toggle_ID = GM_registerMenuCommand(`🔄 ${debug?'开启':'关闭'} 调试 - 点击切换`,  menu_debug_toggle);
+  // -------- 脚本菜单-----------
+  debugging("-->创建脚本菜单<--");
+  // 注册脚本菜单
+  function registerMenuCommand() {
+    if (menu_feedBack_ID || menu_debug_toggle_ID) {
+      // 如果反馈菜单ID不是 null，则删除所有脚本菜单
+      GM_unregisterMenuCommand(menu_debug_toggle_ID);
+      GM_unregisterMenuCommand(menu_feedBack_ID);
+      debug = GM_getValue("debug");
     }
-    // 切换事件
-    function menu_debug_toggle(){
-        debug = GM_getValue('debug');
-        GM_setValue('debug', !debug);
-        notification.text = `已${debug?'关闭':'开启'} 调试`
-        GM_notification(notification); // 提示消息
-        registerMenuCommand(); // 重新注册脚本菜单
-    }
-
+    menu_feedBack_ID = GM_registerMenuCommand(
+      "💬 反馈 & 建议 [Github]",
+      function () {
+        window.GM_openInTab("https://github.com/ACG-Q/script/issues/2", {
+          active: true,
+          insert: true,
+          setParent: true,
+        });
+      },
+    );
+    menu_debug_toggle_ID = GM_registerMenuCommand(
+      `🔄 ${debug ? "开启" : "关闭"} 调试 - 点击切换`,
+      menu_debug_toggle,
+    );
+  }
+  // 切换事件
+  function menu_debug_toggle() {
+    debug = GM_getValue("debug");
+    GM_setValue("debug", !debug);
+    notification.text = `已${debug ? "关闭" : "开启"} 调试`;
+    GM_notification(notification); // 提示消息
+    registerMenuCommand(); // 重新注册脚本菜单
+  }
 })();

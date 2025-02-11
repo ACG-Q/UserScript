@@ -24,53 +24,64 @@
     "66666666666666",
     "针不戳呀，写的针不戳！",
     "{hitokoto}",
-  ]
-  if(!GM_getValue('msg')){
-    GM_setValue('msg',defualtMsg);
+  ];
+  if (!GM_getValue("msg")) {
+    GM_setValue("msg", defualtMsg);
   }
-  var MSG = GM_getValue('msg');
-  var notification = {text: "", title:`${GM_info.script.name}`, image:`${GM_info.script.icon}`, timeout: 3000};
-  var enable = GM_getValue('enable'), debug = GM_getValue('debug'), menu_enable_toggle_ID, menu_debug_toggle_ID, menu_feedBack_ID, menu_Quick_ID;
+  var MSG = GM_getValue("msg");
+  var notification = {
+    text: "",
+    title: `${GM_info.script.name}`,
+    image: `${GM_info.script.icon}`,
+    timeout: 3000,
+  };
+  var enable = GM_getValue("enable"),
+    debug = GM_getValue("debug"),
+    menu_enable_toggle_ID,
+    menu_debug_toggle_ID,
+    menu_feedBack_ID,
+    menu_Quick_ID;
   registerMenuCommand();
   debugging("-->添加<随机回复>按钮<--");
   let scrolltop = document.querySelector(".c1scrolltop");
   let ulButton = document.querySelector(".c1scrolltop>ul");
-  if(ulButton){
-    try{
+  if (ulButton) {
+    try {
       let ul = ulButton.innerHTML;
-      let html = '<li class="reply ac_show" id="action"><span>随机回复</span></li>';
-      scrolltop.innerHTML = '<ul>'+ html + ul+'</ul>';
+      let html =
+        '<li class="reply ac_show" id="action"><span>随机回复</span></li>';
+      scrolltop.innerHTML = "<ul>" + html + ul + "</ul>";
       let button = document.querySelector("#action");
       debugging(`-->找到<随机回复>按钮: ${button}<--`);
       debugging(`给按钮添加点击监听事件:\n-->${actionRandom}<--`);
       button.addEventListener("click", actionRandom);
       createSelect();
       console.log(`脚本: ${GM_info.script.name}启动成功`);
-    }catch(exception){
+    } catch (exception) {
       debugging(`-->触发异常: ${exception}<--`);
       console.log(`脚本: ${GM_info.script.name}启动失败`);
     }
   }
-  
-  function createSelect(){
+
+  function createSelect() {
     debugging("-->添加<简洁回复框>[下拉框]<--");
     let inputButton = document.querySelector("#fastposteditor");
     let selectButton = document.querySelector("#select");
     let option;
-    MSG = GM_getValue('msg');
-    if(!selectButton){
+    MSG = GM_getValue("msg");
+    if (!selectButton) {
       option = '<option value="0">↓↓↓选择快捷回复↓↓↓</option>';
-      for(let i in MSG){
-        option += `<option value="${i+1}">${MSG[i]}</option>`;
+      for (let i in MSG) {
+        option += `<option value="${i + 1}">${MSG[i]}</option>`;
       }
       let select = `<lable>快捷回复列表<select id="select">${option}</select></lable>`;
       inputButton.innerHTML = select + inputButton.innerHTML;
       selectButton = document.querySelector("#select");
       selectButton.addEventListener("change", actionQuick);
-    }else{
+    } else {
       option = '<option value="0">↓↓↓选择快捷回复↓↓↓</option>';
-      for(let i in MSG){
-        option += `<option value="${i+1}">${MSG[i]}</option>`;
+      for (let i in MSG) {
+        option += `<option value="${i + 1}">${MSG[i]}</option>`;
       }
       selectButton.innerHTML = option;
       selectButton.addEventListener("change", actionQuick);
@@ -79,26 +90,26 @@
 
   debugging("-->创建事件<--");
   // 随机回复事件
-  function actionRandom(){
+  function actionRandom() {
     debugging("-->触发点击<随机回复>事件<--");
     debugging("判断是否为网址第一页");
     getAuthor();
     getHitokoto();
     let info = {
-      author:window.author ? window.author : "楼主获取失败",
-      hitokoto:window.hitokoto ? window.hitokoto : "一言获取失败",
-    }
+      author: window.author ? window.author : "楼主获取失败",
+      hitokoto: window.hitokoto ? window.hitokoto : "一言获取失败",
+    };
     debugging(`-->楼主: ${info.author}<--`);
     debugging(`-->一言: ${info.hitokoto}<--`);
     let inputButton;
     let initialValue;
     let initialStyle;
     let pushButton;
-    MSG = GM_getValue('msg');
+    MSG = GM_getValue("msg");
     let msgIndex = Math.floor(Math.random() * MSG.length);
     let msg = MSG[msgIndex].format(info);
     let isFirst = location.href.search(/.*thread-(\d*)-1-1.html/i);
-    if(isFirst != 0){
+    if (isFirst != 0) {
       debugging("-->获取简洁回复输入框<--");
       inputButton = document.querySelector("#fastpostmessage");
       initialValue = inputButton.value;
@@ -110,7 +121,7 @@
       inputButton.value = msg;
       debugging(`-->3. 点击<发表回复>按钮<--`);
       pushButton = document.querySelector("#fastpostsubmit");
-    }else if(isFirst == 0){
+    } else if (isFirst == 0) {
       debugging("-->获取快捷回复输入框<--");
       inputButton = document.querySelector("#vmessage");
       initialValue = inputButton.value;
@@ -122,12 +133,12 @@
       inputButton.value = msg;
       debugging(`-->3. 点击<快捷回复>按钮<--`);
       pushButton = document.querySelector("#vreplysubmit");
-    }else{
+    } else {
       debugging("-->触发未知BUG: 不存在<简洁回复>,也不存在<快捷回复><--");
       return;
     }
-    enable = GM_getValue('enable');
-    if(enable){
+    enable = GM_getValue("enable");
+    if (enable) {
       pushButton.click();
       debugging("-->4. 还原<--");
       inputButton.value = initialValue;
@@ -136,15 +147,15 @@
     }
   }
   // 快捷回复事件
-  function actionQuick(){
+  function actionQuick() {
     debugging("-->触发点击<快捷回复>事件<--");
     debugging("判断是否为网址第一页");
     getAuthor();
     getHitokoto();
     let info = {
-      author:window.author ? window.author : "楼主获取失败",
-      hitokoto:window.hitokoto ? window.hitokoto : "一言获取失败",
-    }
+      author: window.author ? window.author : "楼主获取失败",
+      hitokoto: window.hitokoto ? window.hitokoto : "一言获取失败",
+    };
     debugging(`-->楼主: ${info.author}<--`);
     debugging(`-->一言: ${info.hitokoto}<--`);
     let inputButton;
@@ -153,7 +164,7 @@
     let pushButton;
     let selectButton = document.querySelector("#select");
     let Index = selectButton.selectedIndex - 1;
-    if(Index > -1 && Index < MSG.length){
+    if (Index > -1 && Index < MSG.length) {
       let msg = MSG[Index].format(info);
       debugging("-->获取简洁回复输入框<--");
       inputButton = document.querySelector("#fastpostmessage");
@@ -166,8 +177,8 @@
       inputButton.value = msg;
       debugging(`-->3. 点击<发表回复>按钮<--`);
       pushButton = document.querySelector("#fastpostsubmit");
-      enable = GM_getValue('enable');
-      if(enable){
+      enable = GM_getValue("enable");
+      if (enable) {
         pushButton.click();
         debugging("-->4. 还原<--");
         inputButton.value = initialValue;
@@ -177,166 +188,194 @@
     }
   }
   // 打印调试信息
-  function debugging(str){
-    debug = GM_getValue('debug');
-    if(debug){
-      console.log(str)
+  function debugging(str) {
+    debug = GM_getValue("debug");
+    if (debug) {
+      console.log(str);
     }
   }
   // box事件
-  function boxClose(event){
+  function boxClose(event) {
     debugging("-->触发窗口关闭事件<--");
     event.stopPropagation();
     let box = document.querySelector("#box");
-    if(box){
+    if (box) {
       box.hidden = true;
     }
   }
-  function boxReset(event){
+  function boxReset(event) {
     debugging("-->触发评论重置事件<--");
     event.stopPropagation();
     let box = document.querySelector("#box");
-    if(box){
+    if (box) {
       let text = document.querySelector("#text");
       text.value = defualtMsg.join("\n");
     }
   }
-  function boxSave(event){
+  function boxSave(event) {
     debugging("-->触发评论保存事件<--");
     event.stopPropagation();
     let box = document.querySelector("#box");
-    if(box){
+    if (box) {
       let text = document.querySelector("#text");
       let comment = text.value;
       let comments = comment.split("\n");
       debugging(comments);
-      GM_setValue('msg', comments);
-      createSelect()
+      GM_setValue("msg", comments);
+      createSelect();
     }
   }
-
 
   // -------- 获取信息事件-----------
   // 获取楼主名称
-  function getAuthor(){
-    if(location.href.search(/.*thread-(\d*)-1-1.html/i) != 0){
+  function getAuthor() {
+    if (location.href.search(/.*thread-(\d*)-1-1.html/i) != 0) {
       window.author = document.querySelectorAll("#tath>a")[0].title;
-    }else{
+    } else {
       window.author = document.querySelectorAll(".authi>.xw1")[0].innerHTML;
     }
-    return window.author
+    return window.author;
   }
   // 获取一言
-  function getHitokoto(){
+  function getHitokoto() {
     let msg;
     let author;
     let httpRequest;
-    if (window.XMLHttpRequest){// code for IE7, Firefox, Mozilla, etc.
-      httpRequest=new XMLHttpRequest();
-    }else if (window.ActiveXObject){// code for IE5, IE6
-      httpRequest=new ActiveXObject("Microsoft.XMLHTTP");
+    if (window.XMLHttpRequest) {
+      // code for IE7, Firefox, Mozilla, etc.
+      httpRequest = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+      // code for IE5, IE6
+      httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
     }
-    httpRequest.open('GET', 'https://v1.hitokoto.cn/', true);
+    httpRequest.open("GET", "https://v1.hitokoto.cn/", true);
     httpRequest.send();
     httpRequest.onload = function () {
       if (httpRequest.readyState == 4 && httpRequest.status == 200) {
         let json = httpRequest.responseText;
-        let jsonObject = eval('(' + json + ')');
+        let jsonObject = eval("(" + json + ")");
         msg = jsonObject.hitokoto;
         author = jsonObject.from;
         let spaceLength = Math.floor(msg.length * 2);
         let space = new Array(spaceLength).join(" ");
         window.hitokoto = `${msg}\n${space}-${author}`;
-      }else{
-        alert(`HTTP请求失败,错误原因: 请求的URL的相应状态=${httpRequest.status}\n请求的结果状态=${httpRequest.readyState}`)
+      } else {
+        alert(
+          `HTTP请求失败,错误原因: 请求的URL的相应状态=${httpRequest.status}\n请求的结果状态=${httpRequest.readyState}`,
+        );
       }
     };
-    httpRequest.onerror = function(){
-       alert(`HTTP请求失败,错误原因: 请求的URL的相应状态=${httpRequest.status}\n请求的结果状态=${httpRequest.readyState}`)
-    }
+    httpRequest.onerror = function () {
+      alert(
+        `HTTP请求失败,错误原因: 请求的URL的相应状态=${httpRequest.status}\n请求的结果状态=${httpRequest.readyState}`,
+      );
+    };
   }
-  
+
   // 添加字符串format方法
-  String.prototype.format = function(args) {
+  String.prototype.format = function (args) {
     var result = this;
-    if (arguments.length > 0) {    
-        if (arguments.length == 1 && typeof (args) == "object") {
-            for (var key in args) {
-                if(args[key]!=undefined){
-                    var reg = new RegExp("({" + key + "})", "g");
-                    result = result.replace(reg, args[key]);
-                }
-            }
-        }
-        else {
-            for (var i = 0; i < arguments.length; i++) {
-                if (arguments[i] != undefined) {
-                    //var reg = new RegExp("({[" + i + "]})", "g");//这个在索引大于9时会有问题
-                    var reg = new RegExp("({)" + i + "(})", "g");
-                    result = result.replace(reg, arguments[i]);
-             }
+    if (arguments.length > 0) {
+      if (arguments.length == 1 && typeof args == "object") {
+        for (var key in args) {
+          if (args[key] != undefined) {
+            var reg = new RegExp("({" + key + "})", "g");
+            result = result.replace(reg, args[key]);
           }
-       }
+        }
+      } else {
+        for (var i = 0; i < arguments.length; i++) {
+          if (arguments[i] != undefined) {
+            //var reg = new RegExp("({[" + i + "]})", "g");//这个在索引大于9时会有问题
+            var reg = new RegExp("({)" + i + "(})", "g");
+            result = result.replace(reg, arguments[i]);
+          }
+        }
+      }
     }
     return result;
-  }
-  
+  };
+
   // -------- 脚本菜单-----------
   debugging("-->创建脚本菜单<--");
   // 注册脚本菜单
   function registerMenuCommand() {
-    if (menu_feedBack_ID || menu_enable_toggle_ID || menu_debug_toggle_ID || menu_Quick_ID){ // 如果反馈菜单ID不是 null，则删除所有脚本菜单
+    if (
+      menu_feedBack_ID ||
+      menu_enable_toggle_ID ||
+      menu_debug_toggle_ID ||
+      menu_Quick_ID
+    ) {
+      // 如果反馈菜单ID不是 null，则删除所有脚本菜单
       GM_unregisterMenuCommand(menu_enable_toggle_ID);
       GM_unregisterMenuCommand(menu_debug_toggle_ID);
       GM_unregisterMenuCommand(menu_Quick_ID);
       GM_unregisterMenuCommand(menu_feedBack_ID);
-      enable = GM_getValue('enable');
-      debug = GM_getValue('debug');
+      enable = GM_getValue("enable");
+      debug = GM_getValue("debug");
     }
-    menu_feedBack_ID = GM_registerMenuCommand('💬 反馈 & 建议 [Github]', function () {window.GM_openInTab('https://github.com/ACG-Q/script/issues/1', {active: true,insert: true,setParent: true});});
+    menu_feedBack_ID = GM_registerMenuCommand(
+      "💬 反馈 & 建议 [Github]",
+      function () {
+        window.GM_openInTab("https://github.com/ACG-Q/script/issues/1", {
+          active: true,
+          insert: true,
+          setParent: true,
+        });
+      },
+    );
     menu_Quick_ID = GM_registerMenuCommand(`🧰 快捷评论管理`, menu_Quick);
-    menu_enable_toggle_ID = GM_registerMenuCommand(`🔄 ${enable?'开启':'关闭'} 自动回复 - 点击切换`,  menu_enable_toggle);
-    menu_debug_toggle_ID = GM_registerMenuCommand(`🔄 ${debug?'开启':'关闭'} 调试 - 点击切换`,  menu_debug_toggle);
+    menu_enable_toggle_ID = GM_registerMenuCommand(
+      `🔄 ${enable ? "开启" : "关闭"} 自动回复 - 点击切换`,
+      menu_enable_toggle,
+    );
+    menu_debug_toggle_ID = GM_registerMenuCommand(
+      `🔄 ${debug ? "开启" : "关闭"} 调试 - 点击切换`,
+      menu_debug_toggle,
+    );
   }
   // 切换事件
   function menu_enable_toggle() {
-    enable = GM_getValue('enable');
-    GM_setValue('enable', !enable);
-    enable = GM_getValue('enable');
-    notification.text = `已${enable?'开启':'关闭'} 自动回复`
+    enable = GM_getValue("enable");
+    GM_setValue("enable", !enable);
+    enable = GM_getValue("enable");
+    notification.text = `已${enable ? "开启" : "关闭"} 自动回复`;
     GM_notification(notification); // 提示消息
     registerMenuCommand(); // 重新注册脚本菜单
-  };
-  function menu_debug_toggle(){
-    debug = GM_getValue('debug');
-    GM_setValue('debug', !debug);
-    debug = GM_getValue('debug');
-    notification.text = `已${debug?'开启':'关闭'} 调试`
+  }
+  function menu_debug_toggle() {
+    debug = GM_getValue("debug");
+    GM_setValue("debug", !debug);
+    debug = GM_getValue("debug");
+    notification.text = `已${debug ? "开启" : "关闭"} 调试`;
     GM_notification(notification); // 提示消息
     registerMenuCommand(); // 重新注册脚本菜单
-  };
-  function menu_Quick(){
+  }
+  function menu_Quick() {
     let box = document.querySelector("#box");
     let msg;
-    if(!box){
-      let quickHTML = '<div id="box" style="position: fixed; top: 105px; left: 1022px; padding: 10px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border-radius: 10px; z-index: 9; cursor: default; border: 1px solid;"><input type="button" value="X" id="close" style="border: 1px solid;background: rgba(255, 255, 255,0) none repeat scroll 0% 0%;padding: 0;float: right;width: 20px;border-radius: 5px;text-align: center;"><h1>快捷评论管理</h1><textarea id="text" autofocus="true" style="width: 250px;height: 200px;border-radius: 5px;border: 1px solid;"></textarea><br><input type="button" value="重置" id="reset" style="border: none;background: rgba(255, 255, 255,0) none repeat scroll 0% 0%;padding: 0;margin: 0;">&nbsp;&nbsp;<input type="button" value="保存" id="save" style="border: none;background: rgba(255, 255, 255,0) none repeat scroll 0% 0%;padding: 0;margin: 0;"></div>';
+    if (!box) {
+      let quickHTML =
+        '<div id="box" style="position: fixed; top: 105px; left: 1022px; padding: 10px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border-radius: 10px; z-index: 9; cursor: default; border: 1px solid;"><input type="button" value="X" id="close" style="border: 1px solid;background: rgba(255, 255, 255,0) none repeat scroll 0% 0%;padding: 0;float: right;width: 20px;border-radius: 5px;text-align: center;"><h1>快捷评论管理</h1><textarea id="text" autofocus="true" style="width: 250px;height: 200px;border-radius: 5px;border: 1px solid;"></textarea><br><input type="button" value="重置" id="reset" style="border: none;background: rgba(255, 255, 255,0) none repeat scroll 0% 0%;padding: 0;margin: 0;">&nbsp;&nbsp;<input type="button" value="保存" id="save" style="border: none;background: rgba(255, 255, 255,0) none repeat scroll 0% 0%;padding: 0;margin: 0;"></div>';
       let body = document.querySelector("body");
       body.innerHTML = quickHTML + body.innerHTML;
       box = document.querySelector("#box");
       let left = GM_getValue("boxLeft");
       let top = GM_getValue("boxTop");
-      if(left || top){
-        box.style.left = left + 'px';
-        box.style.top = top + 'px';
+      if (left || top) {
+        box.style.left = left + "px";
+        box.style.top = top + "px";
       }
       let text = document.querySelector("#text");
-      msg = GM_getValue('msg');
+      msg = GM_getValue("msg");
       text.value = msg.join("\n");
-      
+
       // -----拖拽事件-------
-      let x,y,isDown = false;
+      let x,
+        y,
+        isDown = false;
       //鼠标按下事件
-      box.addEventListener('mousedown',mousedownbox);
+      box.addEventListener("mousedown", mousedownbox);
       function mousedownbox(e) {
         //获取x坐标和y坐标
         x = e.clientX;
@@ -347,14 +386,14 @@
         top = box.offsetTop;
         //开关打开
         isDown = true;
-        //设置样式  
-        box.style.cursor = 'move';
+        //设置样式
+        box.style.cursor = "move";
       }
       //鼠标移动
-      box.addEventListener('mousemove',mousemovebox);
+      box.addEventListener("mousemove", mousemovebox);
       function mousemovebox(e) {
         if (isDown == false) {
-            return;
+          return;
         }
         //获取x和y
         let nx = e.clientX;
@@ -363,49 +402,45 @@
         let nl = nx - (x - left);
         let nt = ny - (y - top);
 
-        box.style.left = nl + 'px';
-        box.style.top = nt + 'px';
-        
-        GM_setValue("boxLeft",nl);
-        GM_setValue("boxTop",nt);
+        box.style.left = nl + "px";
+        box.style.top = nt + "px";
+
+        GM_setValue("boxLeft", nl);
+        GM_setValue("boxTop", nt);
       }
       //鼠标抬起事件
-      box.addEventListener('mouseup',mouseupbox);
+      box.addEventListener("mouseup", mouseupbox);
       function mouseupbox() {
         //开关关闭
         isDown = false;
-        box.style.cursor = 'default';
+        box.style.cursor = "default";
       }
-      function noMove(event){
+      function noMove(event) {
         debugging("-->触发不鼠标移动事件<--");
         isDown = false;
       }
-      
+
       // -----按钮关闭事件-----
       let closeButton = document.querySelector("#close");
       let resetButton = document.querySelector("#reset");
       let saveButton = document.querySelector("#save");
       let button = document.querySelector("#action");
-      
+
       closeButton.addEventListener("click", boxClose);
       resetButton.addEventListener("click", boxReset);
       saveButton.addEventListener("click", boxSave);
-      
+
       closeButton.addEventListener("mousemove", noMove);
       resetButton.addEventListener("mousemove", noMove);
       saveButton.addEventListener("mousemove", noMove);
       text.addEventListener("mousemove", noMove);
-      
-      button.addEventListener("click", actionRandom);
-      
-      
 
-    }else{
+      button.addEventListener("click", actionRandom);
+    } else {
       box.hidden = !box.hidden;
       let text = document.querySelector("#text");
-      msg = GM_getValue('msg');
+      msg = GM_getValue("msg");
       text.value = msg.join("\n");
     }
   }
-})()
-
+})();
