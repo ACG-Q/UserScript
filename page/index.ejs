@@ -1,0 +1,22 @@
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Author</th>
+      <th>Version</th>
+      <th>Download</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% scripts.forEach(script => { %>
+      <tr>
+        <td><%= script.name %></td>
+        <td><%= script.description %></td>
+        <td><%= script.author %></td>
+        <td><%= script.version %></td>
+        <td><a href="/scripts/<%= script.filePath %>">Download</a></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
