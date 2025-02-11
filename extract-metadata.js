@@ -6,7 +6,8 @@ const metadataFile = 'metadata.json';
 
 const extractMetadata = (filePath) => {
   try {
-    const scriptId = filePath.replace('scripts/', '').replace('.user.js', '');
+    filePath = filePath.replace(`${scriptsDir}/`, '').replace(/\\/g, '/');
+    const scriptId = filePath.replace('.user.js', '');
     const content = readFileSync(filePath, 'utf-8');
     const metadata = {};
     const metaRegex = /^\/\/ @(\w+)(?:\s+(.+))?$/gm;
@@ -21,7 +22,7 @@ const extractMetadata = (filePath) => {
     return {
       ...metadata,
       id: scriptId,
-      filePath: filePath.replace(`${scriptsDir}/`, ''),
+      filePath: filePath,
     };
   } catch (error) {
     console.error(`Error extracting metadata from ${filePath}:`, error);

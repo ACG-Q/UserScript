@@ -8,8 +8,8 @@
     "version": "1.1",
     "author": "六记",
     "description": "9大妈自动计算并填写",
-    "id": "scripts\\9dm自动填写计算",
-    "filePath": "scripts\\9dm自动填写计算.user.js"
+    "id": "scripts/9dm自动填写计算",
+    "filePath": "scripts/9dm自动填写计算.user.js"
   },
   {
     "name": "9dm随机回帖",
@@ -20,8 +20,8 @@
     "version": "1.2",
     "author": "六记",
     "description": "9大妈一键随机回复帖子, 切勿滥用, 违反9大妈论坛的规矩导致的后果, 作者一概不负.功能: 1. 添加随机回复按钮2. 添加快捷回复下拉框3. 添加评论管理器",
-    "id": "scripts\\9dm随机回帖",
-    "filePath": "scripts\\9dm随机回帖.user.js"
+    "id": "scripts/9dm随机回帖",
+    "filePath": "scripts/9dm随机回帖.user.js"
   },
   {
     "name": "Steam创意工坊mod下载工具",
@@ -32,8 +32,8 @@
     "match": "https://steamworkshopdownloader.io/*",
     "connect": "*.steamworkshopdownloader.io",
     "grant": "GM_xmlhttpRequest",
-    "id": "scripts\\Steam创意工坊mod下载工具",
-    "filePath": "scripts\\Steam创意工坊mod下载工具.user.js"
+    "id": "scripts/Steam创意工坊mod下载工具",
+    "filePath": "scripts/Steam创意工坊mod下载工具.user.js"
   },
   {
     "name": "IC千库网, 去登陆弹窗, 添加免VIP下载按钮, GIF图为无水印图",
@@ -43,7 +43,7 @@
     "version": "1.1",
     "author": "六记",
     "description": "2021/9/11 下午8:21:16",
-    "id": "scripts\\图库下载",
-    "filePath": "scripts\\图库下载.user.js"
+    "id": "scripts/图库下载",
+    "filePath": "scripts/图库下载.user.js"
   }
 ]
