@@ -12,7 +12,7 @@ const renderPage = (metadata) => {
       description: script.description,
       author: script.author,
       version: script.version,
-      downloadLink: `${process.env.GITHUB_RAW_URL || ""}/${script.filePath}`,
+      downloadLink: resolve(process.env.GITHUB_RAW_URL || "", script.filePath),
     }));
 
     return ejs.render(template, { scripts });
