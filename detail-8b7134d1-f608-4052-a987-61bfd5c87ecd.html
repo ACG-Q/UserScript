@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Script Detail</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Script Detail</h1>
+      <button id="backButton" class="back-button">← Back</button>
+    </header>
+
+    <main id="detailContent">
+      <h2 id="detailTitle">番茄免费小说 - 允许复制以及字体解密</h2>
+
+      
+        <p><strong>namespace:</strong> http://tampermonkey.net/</p>
+      
+        <p><strong>version:</strong> 0.1</p>
+      
+        <p><strong>description:</strong> 解密番茄免费小说的字体</p>
+      
+        <p><strong>author:</strong> 六记</p>
+      
+        <p><strong>match:</strong> https://fanqienovel.com/reader/*</p>
+      
+        <p><strong>grant:</strong> GM_getResourceText,GM_setValue,GM_getValue</p>
+      
+        <p><strong>resource:</strong> charset https://github.com/ying-ck/fanqienovel-downloader/raw/refs/heads/main/src/charset.json</p>
+      
+        <p><strong>id:</strong> 8b7134d1-f608-4052-a987-61bfd5c87ecd</p>
+      
+        <p><strong>filePath:</strong> scripts/番茄免费小说 - 允许复制以及字体解密.user.js</p>
+      
+        <p><strong>downloadLink:</strong> https://raw.githubusercontent.com/ACG-Q/UserScript/main/scripts/番茄免费小说 - 允许复制以及字体解密.user.js</p>
+      
+
+      <p><strong>content:</strong></p>
+      <pre>// ==UserScript==
+// @icon         https://p1-tt.byteimg.com/origin/novel-static/a3621391ca2e537045168afda6722ee9
+// @name         番茄免费小说 - 允许复制以及字体解密
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  解密番茄免费小说的字体
+// @author       六记
+// @match        https://fanqienovel.com/reader/*
+// @grant        GM_getResourceText
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @resource     charset https://github.com/ying-ck/fanqienovel-downloader/raw/refs/heads/main/src/charset.json
+// ==/UserScript==
+
+(function () {
+  &#34;use strict&#34;;
+
+  // 取消禁止选中
+  const noSelectElements = document.querySelectorAll(&#34;.noselect&#34;);
+  noSelectElements.forEach((element) =&gt; {
+    element.classList.remove(&#34;noselect&#34;);
+  });
+
+  // 创建并初始化字符映射表
+  let charset = GM_getValue(&#34;charset&#34;);
+
+  if (!charset) {
+    const charsetResource = GM_getResourceText(&#34;charset&#34;);
+    charset = JSON.parse(charsetResource);
+    GM_setValue(&#34;charset&#34;, charset);
+  }
+
+  // 解密内容函数
+  function decryptContent(content, debug = false) {
+    let result = &#34;&#34;;
+
+    for (const char of content) {
+      const uni = char.charCodeAt(0);
+      const hexUni = `0x${uni.toString(16).toUpperCase()}`;
+      let decryptedChar = char;
+
+      const codeRanges = [
+        [58344, 58715],
+        [58345, 58716],
+      ];
+
+      for (let mode = 0; mode &lt; codeRanges.length; mode++) {
+        const [start, end] = codeRanges[mode];
+        if (uni &gt;= start &amp;&amp; uni &lt;= end) {
+          const bias = uni - start;
+          if (
+            bias &gt;= 0 &amp;&amp;
+            bias &lt; charset[mode].length &amp;&amp;
+            charset[mode][bias] !== &#34;?&#34;
+          ) {
+            decryptedChar = charset[mode][bias];
+            if (debug)
+              console.log(
+                `解密字符：${char} (${hexUni}) -&gt; ${charset[mode][bias]} - ${mode} - ${bias}`,
+              );
+            break;
+          } else if (debug) {
+            console.log(`未找到映射：${char} (${hexUni})`);
+          }
+        }
+      }
+
+      result += decryptedChar;
+    }
+
+    return result;
+  }
+
+  // 更新页面内容
+  const paragraphElements = document.querySelectorAll(&#34;.muye-reader-content p&#34;);
+  paragraphElements.forEach((pElement) =&gt; {
+    const originalContent = pElement.textContent;
+    const decryptedContent = decryptContent(originalContent, false);
+
+    // 更新内容
+    pElement.textContent = decryptedContent;
+  });
+
+  console.log(&#34;内容已解密&#34;);
+})();
+</pre>
+    </main>
+  </div>
+
+  <script>
+    // 返回首页
+    document.getElementById('backButton').addEventListener('click', () => {
+      window.history.back();
+    });
+  </script>
+</body>
+</html>

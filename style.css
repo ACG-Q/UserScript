@@ -1,11 +1,16 @@
-/* General Styles */
-body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #f4f4f9;
-  color: #333;
+/* 基础样式重置 */
+body, html {
   margin: 0;
   padding: 0;
+  font-family: 'Roboto', sans-serif;
   line-height: 1.6;
+  color: #333;
+}
+
+/* 全局样式 */
+body {
+  background-color: #f5f5f5;
+  font-size: 16px;
 }
 
 .container {
@@ -15,97 +20,150 @@ body {
 }
 
 header {
-  text-align: center;
-  margin-bottom: 30px;
+  background-color: #3498db;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  font-size: 2.5rem;
-  color: #2c3e50;
-  margin-bottom: 20px;
+  margin: 0;
+  font-size: 24px;
 }
 
+/* 搜索框样式 */
 .search-box {
-  width: 100%;
-  max-width: 400px;
-  padding: 10px;
-  font-size: 1rem;
-  border: 2px solid #3498db;
-  border-radius: 5px;
-  outline: none;
-  transition: border-color 0.3s ease;
+  padding: 8px 12px;
+  margin-top: 20px;
+  width: 300px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .search-box:focus {
-  border-color: #2980b9;
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.5);
 }
 
-/* Table Styles */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
+/* 按钮样式 */
+button,
+.btn,
+.update-btn,
+.back-button,
+.download-link {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-th, td {
-  padding: 12px 15px;
-  text-align: left;
+button:hover,
+.btn:hover,
+.update-btn:hover,
+.back-button:hover,
+.download-link:hover {
+  background-color: #5390c1;
 }
 
-th {
-  background-color: #3498db;
+.back-button {
+  background-color: #59adef;
   color: white;
-  font-weight: 500;
-}
-
-tr:nth-child(even) {
-  background-color: #f8f9fa;
-}
-
-tr:hover {
-  background-color: #f1f1f1;
-}
-
-.icon {
-  width: 24px;
-  height: 24px;
-  vertical-align: middle;
-  margin-right: 10px;
-}
-
-.description {
-  max-width: 300px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .download-link {
+  background-color: #59adef;
+  color: white;
+  text-decoration: none;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+/* 表格样式 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table thead {
+  background-color: #3498db;
+  color: white;
+}
+
+table th,
+table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+table tbody tr:hover {
+  background-color: #f8f8f8;
+}
+
+table  td:nth-child(2) > a {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 200px;
+  display: block;
+}
+
+table  td > a {
   color: #3498db;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
+  font-weight: bold;
 }
 
-.download-link:hover {
-  color: #2980b9;
+table  td > a:hover {
+  color: #2c7db3;
 }
 
-/* Responsive Design */
+/* 图标样式 */
+.icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* 响应式设计 */
 @media (max-width: 768px) {
-  h1 {
-    font-size: 2rem;
+  .container {
+    padding: 10px;
   }
 
   .search-box {
-    width: 90%;
+    width: 100%;
+    margin-top: 10px;
   }
 
   table {
-    display: block;
-    overflow-x: auto;
+    font-size: 14px;
   }
+}
+
+pre {
+  display: block;
+  padding: 20px;
+  border: 1px solid #59adef;
+  background: #59adef;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: white;
+  margin: 0;
+  border-radius: 8px;
+  background-image: linear-gradient(145deg, #59adef, #3e548a);
+}
+
+strong {
+  text-transform: capitalize;
 }
