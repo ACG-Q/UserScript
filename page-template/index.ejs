@@ -15,7 +15,8 @@
       <input type="text" id="searchBox" placeholder="Search scripts..." class="search-box">
     </header>
 
-    <main>
+    <main id="mainContent">
+      <!-- 首页内容 -->
       <table id="userScripts">
         <thead>
           <tr>
@@ -24,23 +25,25 @@
             <th>Description</th>
             <th>Author</th>
             <th>Version</th>
-            <th>Download</th>
+            <th></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="scriptList">
           <% scripts.forEach((script, index) => { %>
-            <tr class="script-row">
+            <tr class="script-row" data-script-id="<%= script.id %>">
               <td><%= index + 1 %></td>
               <td>
-                <% if (script.icon) { %>
-                  <img src="<%= script.icon %>" alt="Icon" class="icon">
-                <% } %>
-                <%= script.name %>
+                <a href="detail-<%= script.id %>.html" class="script-link">
+                  <% if (script.icon) { %>
+                    <img src="<%= script.icon %>" alt="Icon" class="icon">
+                  <% } %>
+                  <%= script.name %>
+                </a>
               </td>
               <td class="description" title="<%= script.description %>"><%= script.description %></td>
               <td><%= script.author %></td>
               <td><%= script.version %></td>
-              <td><a href="<%= script.downloadLink %>" class="download-link">Download</a></td>
+              <td><a href="<%= script.downloadLink %>" class="download-link">Add</a></td>
             </tr>
           <% }); %>
         </tbody>

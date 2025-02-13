@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Script Detail</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Script Detail</h1>
+      <button id="backButton" class="back-button">← Back</button>
+    </header>
+
+    <main id="detailContent">
+      <h2 id="detailTitle"><%= script.name %></h2>
+
+      <% Object.keys(script).filter(key=>key!== "name" && key !== "content" && key !== "icon").forEach(key => { %>
+        <p><strong><%= key %>:</strong> <%= Array.isArray(script[key]) ? script[key].join(",") : script[key] %></p>
+      <% }); %>
+
+      <p><strong>content:</strong></p>
+      <pre><%= script.content %></pre>
+    </main>
+  </div>
+
+  <script>
+    // 返回首页
+    document.getElementById('backButton').addEventListener('click', () => {
+      window.history.back();
+    });
+  </script>
+</body>
+</html>

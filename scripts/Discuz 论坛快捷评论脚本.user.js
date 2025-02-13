@@ -16,49 +16,53 @@
 // @grant        none
 // ==/UserScript==
 
-
 (function () {
-  'use strict';
+  "use strict";
 
   // 通用请求函数
   function fetchQuote(url, callback) {
     fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
-      }
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+      },
     })
-    .then(response => response.json())
-    .then(data => callback(data))
-    .catch(error => {
-      console.error(`${url} 请求失败:`, error);
-    });
+      .then((response) => response.json())
+      .then((data) => callback(data))
+      .catch((error) => {
+        console.error(`${url} 请求失败:`, error);
+      });
   }
 
   // 获取随机一言评论
   function fetchHitokoto() {
-    fetchQuote('https://v1.hitokoto.cn/', data => {
+    fetchQuote("https://v1.hitokoto.cn/", (data) => {
       updateTextarea(`${data.hitokoto} —— ${data.from}`);
     });
   }
 
   // 获取随机彩虹屁评论
   function fetchChp() {
-    fetchQuote('https://api.shadiao.pro/chp', data => {
+    fetchQuote("https://api.shadiao.pro/chp", (data) => {
       updateTextarea(data.data.text);
     });
   }
 
   // 获取肯德基疯狂星期四评论
   function fetchKfc() {
-    fetchQuote('https://api.shadiao.pro/kfc', data => {
+    fetchQuote("https://api.shadiao.pro/kfc", (data) => {
       updateTextarea(data.data.text);
     });
   }
 
   // 更新文本区域内容
   function updateTextarea(text) {
-    const textarea = document.querySelector('#fastposteditor .area textarea, .mtm.mbm.pnpost textarea') || document.querySelector('iframe')?.contentDocument?.querySelector('body');
+    const textarea =
+      document.querySelector(
+        "#fastposteditor .area textarea, .mtm.mbm.pnpost textarea",
+      ) ||
+      document.querySelector("iframe")?.contentDocument?.querySelector("body");
     if (textarea) {
       textarea.value = text;
       textarea.innerText = text;
@@ -67,16 +71,16 @@
 
   // 创建按钮并添加到页面
   function createButton(text, onClick) {
-    const button = document.createElement('button');
+    const button = document.createElement("button");
     button.textContent = text;
-    button.className = 'random-quote-button';
+    button.className = "random-quote-button";
     button.onclick = onClick;
     return button;
   }
 
   // 设置按钮样式
   function addStyles() {
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.innerHTML = `
       .random-quote-button {
         margin: 5px;
@@ -98,18 +102,20 @@
 
   // 设置随机语句按钮
   function setupRandomQuoteButton() {
-    const area = document.querySelector('#fastposteditor .area, .mtm.mbm.pnpost');
+    const area = document.querySelector(
+      "#fastposteditor .area, .mtm.mbm.pnpost",
+    );
     if (!area) return;
 
-    addStyles();  // 添加按钮样式
+    addStyles(); // 添加按钮样式
 
-    const hitokotoButton = createButton('获取随机一言评论', fetchHitokoto);
+    const hitokotoButton = createButton("获取随机一言评论", fetchHitokoto);
     area.appendChild(hitokotoButton);
 
-    const chpButton = createButton('获取随机彩虹屁评论', fetchChp);
+    const chpButton = createButton("获取随机彩虹屁评论", fetchChp);
     area.appendChild(chpButton);
 
-    const kfcButton = createButton('获取肯德基疯狂星期四评论', fetchKfc);
+    const kfcButton = createButton("获取肯德基疯狂星期四评论", fetchKfc);
     area.appendChild(kfcButton);
   }
 

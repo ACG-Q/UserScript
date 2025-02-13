@@ -12,27 +12,27 @@
 // @resource     charset https://github.com/ying-ck/fanqienovel-downloader/raw/refs/heads/main/src/charset.json
 // ==/UserScript==
 
-(function() {
-  'use strict';
+(function () {
+  "use strict";
 
   // 取消禁止选中
-  const noSelectElements = document.querySelectorAll('.noselect');
+  const noSelectElements = document.querySelectorAll(".noselect");
   noSelectElements.forEach((element) => {
-    element.classList.remove('noselect');
+    element.classList.remove("noselect");
   });
 
   // 创建并初始化字符映射表
-  let charset = GM_getValue('charset');
+  let charset = GM_getValue("charset");
 
   if (!charset) {
-    const charsetResource = GM_getResourceText('charset');
+    const charsetResource = GM_getResourceText("charset");
     charset = JSON.parse(charsetResource);
-    GM_setValue('charset', charset);
+    GM_setValue("charset", charset);
   }
 
   // 解密内容函数
   function decryptContent(content, debug = false) {
-    let result = '';
+    let result = "";
 
     for (const char of content) {
       const uni = char.charCodeAt(0);
@@ -48,9 +48,16 @@
         const [start, end] = codeRanges[mode];
         if (uni >= start && uni <= end) {
           const bias = uni - start;
-          if (bias >= 0 && bias < charset[mode].length && charset[mode][bias] !== '?') {
+          if (
+            bias >= 0 &&
+            bias < charset[mode].length &&
+            charset[mode][bias] !== "?"
+          ) {
             decryptedChar = charset[mode][bias];
-            if (debug) console.log(`解密字符：${char} (${hexUni}) -> ${charset[mode][bias]} - ${mode} - ${bias}`);
+            if (debug)
+              console.log(
+                `解密字符：${char} (${hexUni}) -> ${charset[mode][bias]} - ${mode} - ${bias}`,
+              );
             break;
           } else if (debug) {
             console.log(`未找到映射：${char} (${hexUni})`);
@@ -65,7 +72,7 @@
   }
 
   // 更新页面内容
-  const paragraphElements = document.querySelectorAll('.muye-reader-content p');
+  const paragraphElements = document.querySelectorAll(".muye-reader-content p");
   paragraphElements.forEach((pElement) => {
     const originalContent = pElement.textContent;
     const decryptedContent = decryptContent(originalContent, false);
@@ -74,5 +81,5 @@
     pElement.textContent = decryptedContent;
   });
 
-  console.log('内容已解密');
+  console.log("内容已解密");
 })();
