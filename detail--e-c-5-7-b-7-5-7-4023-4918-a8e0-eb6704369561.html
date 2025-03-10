@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Script Detail</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Script Detail</h1>
+      <button id="backButton" class="back-button">← Back</button>
+    </header>
+
+    <main id="detailContent">
+      <h2 id="detailTitle">Kimi 选择性删除历史会话</h2>
+
+      
+        <p><strong>namespace:</strong> </p>
+      
+        <p><strong>version:</strong> 1.1</p>
+      
+        <p><strong>description:</strong> 在 Kimi 聊天记录页面为每个会话添加单选框，并提供一个美观的删除按钮，实现选择性删除历史会话。</p>
+      
+        <p><strong>author:</strong> 六记</p>
+      
+        <p><strong>match:</strong> https://kimi.ai/chat/*</p>
+      
+        <p><strong>id:</strong> -e-c-5-7-b-7-5-7-4023-4918-a8e0-eb6704369561</p>
+      
+        <p><strong>filePath:</strong> scripts/Kimi 选择性删除历史会话.user.js</p>
+      
+        <p><strong>downloadLink:</strong> https://raw.githubusercontent.com/ACG-Q/UserScript/main/scripts/Kimi 选择性删除历史会话.user.js</p>
+      
+
+      <p><strong>content:</strong></p>
+      <pre>// ==UserScript==
+// @name         Kimi 选择性删除历史会话
+// @namespace
+// @version      1.1
+// @description  在 Kimi 聊天记录页面为每个会话添加单选框，并提供一个美观的删除按钮，实现选择性删除历史会话。
+// @author       六记
+// @match        https://kimi.ai/chat/*
+// @icon         https://kimi.ai/favicon.ico
+// ==/UserScript==
+
+(function () {
+  &#34;use strict&#34;;
+
+  /**
+   *  添加单选框到历史会话
+   */
+  function addRadioButtonsToChatLinks() {
+    const chatLinks = document.querySelectorAll(&#34;.history-chat&#34;);
+
+    if (chatLinks.length === 0) {
+      return;
+    }
+
+    chatLinks.forEach((link) =&gt; {
+      if (link.querySelector(&#34;.chat-select-radio&#34;)) return; // 防止重复添加
+
+      const radio = document.createElement(&#34;input&#34;);
+      radio.type = &#34;radio&#34;;
+      radio.name = &#34;chat-select&#34;;
+      radio.classList.add(&#34;chat-select-radio&#34;);
+
+      // 创建标签（可选）
+      const label = document.createElement(&#34;label&#34;);
+      label.textContent = &#34; 选择&#34;;
+      label.style.marginLeft = &#34;5px&#34;;
+      label.style.color = &#34;#999&#34;;
+      label.style.fontSize = &#34;14px&#34;;
+
+      const chatInfo = link.querySelector(&#34;.history-chat-info&#34;);
+      if (chatInfo) {
+        chatInfo.appendChild(radio);
+        chatInfo.appendChild(label);
+
+        // 阻止点击单选框时触发 a 标签的跳转
+        radio.addEventListener(&#34;click&#34;, function (event) {
+          event.stopPropagation();
+        });
+      }
+    });
+
+    console.log(&#34;注入成功....&#34;);
+  }
+
+  /**
+   * 删除选中的会话
+   */
+  async function deleteSelectedChats() {
+    const selectedChat = document.querySelector(&#34;.chat-select-radio:checked&#34;);
+
+    if (!selectedChat) {
+      alert(&#34;⚠️ 请选择要删除的会话！&#34;);
+      return;
+    }
+
+    const chatId = selectedChat
+      .closest(&#34;.history-chat&#34;)
+      .getAttribute(&#34;href&#34;)
+      .split(&#34;/&#34;)
+      .pop();
+    if (!chatId) {
+      alert(&#34;❌ 未能获取会话 ID，删除失败！&#34;);
+      return;
+    }
+
+    // 获取授权信息
+    const authHeader = localStorage.getItem(&#34;access_token&#34;);
+    if (!authHeader) {
+      alert(&#34;⚠️ 无法获取授权信息，请确保已登录 Kimi&#34;);
+      return;
+    }
+
+    const headers = {
+      accept: &#34;application/json, text/plain, */*&#34;,
+      authorization: `Bearer ${authHeader}`,
+      &#34;x-msh-platform&#34;: &#34;web&#34;,
+      &#34;x-language&#34;: &#34;zh-CN&#34;,
+      origin: &#34;https://kimi.ai&#34;,
+      referer: &#34;https://kimi.ai/chat/empty&#34;,
+      &#34;user-agent&#34;: navigator.userAgent,
+      dnt: &#34;1&#34;,
+    };
+
+    // 删除请求
+    try {
+      const response = await fetch(`https://kimi.ai/api/chat/${chatId}`, {
+        method: &#34;DELETE&#34;,
+        headers: headers,
+      });
+
+      if (response.ok) {
+        alert(`✅ 成功删除会话 ID: ${chatId}`);
+        selectedChat.closest(&#34;.history-chat&#34;).remove();
+      } else {
+        alert(`❌ 删除失败，请重试！`);
+      }
+    } catch (error) {
+      console.error(&#34;删除会话时发生错误:&#34;, error);
+      alert(&#34;❌ 删除会话时出现问题，请检查网络或稍后再试。&#34;);
+    }
+  }
+
+  /**
+   * 创建并添加删除按钮
+   */
+  function createDeleteButton() {
+    const existingButton = document.getElementById(&#34;delete-selected-chat-btn&#34;);
+    if (existingButton) return; // 防止重复添加
+
+    const button = document.createElement(&#34;button&#34;);
+    button.id = &#34;delete-selected-chat-btn&#34;;
+    button.textContent = &#34;🗑️ 删除选中的会话&#34;;
+    button.style.position = &#34;fixed&#34;;
+    button.style.bottom = &#34;30px&#34;; // 增加底部间距
+    button.style.right = &#34;30px&#34;; // 增加右侧间距
+    button.style.background = &#34;linear-gradient(145deg, #ff4d4f, #d9363e)&#34;; // 渐变背景
+    button.style.color = &#34;white&#34;;
+    button.style.border = &#34;none&#34;;
+    button.style.padding = &#34;12px 18px&#34;;
+    button.style.borderRadius = &#34;12px&#34;;
+    button.style.fontSize = &#34;16px&#34;;
+    button.style.fontWeight = &#34;bold&#34;;
+    button.style.cursor = &#34;pointer&#34;;
+    button.style.boxShadow = &#34;0 4px 8px rgba(0, 0, 0, 0.2)&#34;;
+    button.style.transition = &#34;background 0.3s ease, transform 0.2s ease&#34;;
+    button.style.zIndex = &#34;9999&#34;;
+    button.style.display = &#34;none&#34;;
+
+    button.onmouseover = () =&gt; {
+      button.style.background = &#34;linear-gradient(145deg, #d9363e, #ff4d4f)&#34;;
+      button.style.transform = &#34;scale(1.05)&#34;;
+    };
+    button.onmouseout = () =&gt; {
+      button.style.background = &#34;linear-gradient(145deg, #ff4d4f, #d9363e)&#34;;
+      button.style.transform = &#34;scale(1)&#34;;
+    };
+
+    button.addEventListener(&#34;click&#34;, deleteSelectedChats);
+    document.body.appendChild(button);
+
+    // 监听 history-modal-container 是否显示
+    const observer = new MutationObserver(() =&gt; {
+      const modals = document.getElementsByClassName(&#34;history-modal-container&#34;);
+      if (
+        modals &amp;&amp;
+        modals.length &gt; 0 &amp;&amp;
+        getComputedStyle(modals[0]).display !== &#34;none&#34;
+      ) {
+        button.style.display = &#34;block&#34;;
+      } else {
+        button.style.display = &#34;none&#34;;
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  /**
+   * 页面加载时运行
+   */
+  function init() {
+    addRadioButtonsToChatLinks();
+    createDeleteButton();
+
+    // 监听动态加载（适用于 AJAX 渲染）
+    const observer = new MutationObserver(() =&gt; {
+      addRadioButtonsToChatLinks();
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // 延迟 1 秒初始化，确保页面加载完成
+  setTimeout(init, 1000);
+})();
+</pre>
+    </main>
+  </div>
+
+  <script>
+    // 返回首页
+    document.getElementById('backButton').addEventListener('click', () => {
+      window.history.back();
+    });
+  </script>
+</body>
+</html>
