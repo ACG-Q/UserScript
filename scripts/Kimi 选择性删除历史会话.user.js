@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Kimi 选择性删除历史会话
-// @namespace    
-// @version      1.1
+// @namespace
+// @version      1.2
 // @description  在 Kimi 聊天记录页面为每个会话添加单选框，并提供一个美观的删除按钮，实现选择性删除历史会话。
 // @author       六记
 // @match        https://kimi.ai/chat/*
-// @icon         https://kimi.ai/favicon.ico
+// @match        https://kimi.moonshot.cn/chat/*
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABhCAYAAAApxKSdAAAACXBIWXMAACE4AAAhOAFFljFgAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAUUSURBVHgB7Z29bhtHFIWPHQN2J7lKqnhYpYvpIukCbJEAKQJEegLReYFIT0DrCSI9QEDqCSIDaQIEIOukiJwyza5SJWlId3FFz+HuGmuSSw6p+dlZ3g84luhdUeI9M3fmziyXgBCUe/DHYY0Wj/tgWmjV42zFcWe4MIBBPNJ6qqW0uvAbXFvQgKzQK62bQhkaCIPc10q1Zi3XH1o/IG9cwUm0RogrgDY1KmLgHYX9DvyiBvDYI77XmiD+oLlQHw7hIDoCMBOt1U9w0BsU9mOAtaUUFk3oQoIfzAQFCf5dNMEdTFCQ4NtQih1NSIGgf3ibxOJt5UrAB1gNK72vIdjiI61HWr+YnNxDXK0rJiULsV65GJeiIescLSTTeobKSutiCuojX8kU3MBx4I3WeNVBBRl4fWiCyoB8v2JAAkk9PmDwT8sH1TEghRjgC27scCx41wO43KAg+ILxTvhNaUACwTc04Z0B30LwzTzm5Rjw3sgseIG1wGMawMBPIOQcqvzrNIMHOg9Q5KK953O90/rFC+BhJRH8PQZ+fu7SjC7HAIV95yu99vjlxfvBJx8nwHd6IfNJAkccOjHg6OgIs9lsra6vr2GTNE03/k7q8HAhyJ/2gM9O65/4kT7/mwEcoZwYsPQiV3BwcABb9Ho9KKU2njccDjGdLlxx+InBBPBAAR86ydRPaIC9SASi3+8bnXd+fr78nw8NJ39uDJjXAVFPP7dp/VmWLR9g6w6Huo/IOTk5MTpvZesn/93AiP/dXCwd9SyILT9Jko3n1bZ+8s8rGPGvoVHbEXcPMM39V1dX9Qd/19PPNxta959D4HUGF0RrAFs/8/8mxuPxXLUwtfx2WX+cxdivZ3DFA0SKldZPuPTAKrikbOlMOX+9zFu/Q2iAQoSY5H7mfeb/tXCT8MdneU9wNNCuQUXZA0ynnrUznyqOcrspUY4BJunHqPU3gOgMsNr6G0B0BpgUXrG0fhKVAaaF1/HxMWIhKgNMcj9Tz82Nk6rVGdav/tJ5eraJ0Wi01XPq1r/xOS8uLkJc6XYnRTMNXdf62eIvLy+jyftVghnQ7Xahe8FW59fBTRYOzosDNI1hJdz0lBQkBflkMBjMU5iL13pXRb8fYAJrB/a2db0oFHthAOEUliaYFHE+aaUBdZsvvFhApyM0idYZwOCvW4JmIWdSzPmidQaYrAGZ7iX4oFUGnJ2dGdUCTRqMozeANQCLsE6nA10JG/0Mx4KmDMbBCjEWR2yxu8LAM98vXelmCA2ovVLCI8EMYODWbpbvCXtTBzQVMSAwYkBgxIDAtNKAXWdGIRADAiMpKDA0IIMQikx6QGDEgMCIAYGRMSAsMgaEhgbcQgjFa+kBYZnIGBCWWzEgLPNBOJ6Fk/aR8Y5ZCvktKwX/PJZ7xoVjfs+4chYU11tK2sE85qUBLyH4Zh5z6QHhGPOf6r2j+TEbcgdFP2RaHX5TrYQlDflj5RXE5Q1cG/lWnhYpReUGKdUewGnRmhvnCJbgmxey8sHiZ8iwF3AsUBBckKHI/SWLq6HsBc8huML4DiK80D6WnBqLzN68UFCmopheYJOVYgcU5FOVbAVfYUcUZGoaLPglCtITdg2+tZUFBTFh2+ArWEYh/7z0WIIQSiM43lt5AWAmWhLHylN4QmkNEXfAbGqEQKsHSfHLYwiSq8AnaAAKeaW3D8VbijwNW5nh3IN9FPI/jnpaPKZi2/SfFuJu4W3x9RqWL+N5C+7ruKpBAgLkAAAAAElFTkSuQmCC
 // ==/UserScript==
 
 (function () {
@@ -24,22 +25,17 @@
         chatLinks.forEach(link => {
             if (link.querySelector('.chat-select-radio')) return; // 防止重复添加
 
+
+
             const radio = document.createElement('input');
-            radio.type = 'radio';
+            radio.title = '选择想要删除的对话';
+            radio.type = 'checkbox';
             radio.name = 'chat-select';
             radio.classList.add('chat-select-radio');
-
-            // 创建标签（可选）
-            const label = document.createElement('label');
-            label.textContent = ' 选择';
-            label.style.marginLeft = '5px';
-            label.style.color = '#999';
-            label.style.fontSize = '14px';
 
             const chatInfo = link.querySelector('.history-chat-info');
             if (chatInfo) {
                 chatInfo.appendChild(radio);
-                chatInfo.appendChild(label);
 
                 // 阻止点击单选框时触发 a 标签的跳转
                 radio.addEventListener('click', function (event) {
@@ -47,23 +43,24 @@
                 });
             }
         });
-
-        console.log("注入成功....")
     }
 
     /**
      * 删除选中的会话
      */
     async function deleteSelectedChats() {
-        const selectedChat = document.querySelector('.chat-select-radio:checked');
+        const selectedChats = document.querySelectorAll('.chat-select-radio:checked');
 
-        if (!selectedChat) {
+        if (!selectedChats || selectedChats.length === 0) {
             alert('⚠️ 请选择要删除的会话！');
             return;
         }
 
-        const chatId = selectedChat.closest('.history-chat').getAttribute('href').split('/').pop();
-        if (!chatId) {
+        const chatIds = Array.from(selectedChats).map(selectedChat =>
+            selectedChat.closest('.history-chat').getAttribute('href').split('/').pop()
+        );
+
+        if (!chatIds || chatIds.length === 0) {
             alert('❌ 未能获取会话 ID，删除失败！');
             return;
         }
@@ -86,24 +83,36 @@
             'dnt': '1'
         };
 
-        // 删除请求
-        try {
-            const response = await fetch(`https://kimi.ai/api/chat/${chatId}`, {
-                method: 'DELETE',
-                headers: headers
-            });
+        const createDeleteFetch = async (chatId, selectedChat) => {
+            try {
+                const response = await fetch(`https://kimi.ai/api/chat/${chatId}`, {
+                    method: 'DELETE',
+                    headers: headers
+                });
 
-            if (response.ok) {
-                alert(`✅ 成功删除会话 ID: ${chatId}`);
-                selectedChat.closest('.history-chat').remove();
-            } else {
-                alert(`❌ 删除失败，请重试！`);
+                if (response.ok) {
+                    console.log(`✅ 成功删除会话 ID: ${chatId}`);
+                    selectedChat.closest('.history-chat').remove();
+                } else {
+                    console.log(`❌ 删除失败，请重试！`);
+                }
+            } catch (error) {
+                console.error('删除会话时发生错误:', error);
+                alert('❌ 删除会话时出现问题，请检查网络或稍后再试。');
             }
-        } catch (error) {
-            console.error('删除会话时发生错误:', error);
-            alert('❌ 删除会话时出现问题，请检查网络或稍后再试。');
         }
+
+        const deletePromises = chatIds.map(chatId => {
+            const selectedChat = Array.from(selectedChats).find(selectedChat =>
+                selectedChat.closest('.history-chat').getAttribute('href').split('/').pop() === chatId
+            );
+            return createDeleteFetch(chatId, selectedChat);
+        });
+
+        // 等待所有删除操作完成
+        await Promise.all(deletePromises).then(()=>alert(`✅ 成功删除会话 IDs: ${chatIds.join(", ")}`));
     }
+
 
     /**
      * 创建并添加删除按钮
