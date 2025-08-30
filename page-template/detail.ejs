@@ -145,7 +145,7 @@
                   const codeBlock = document.getElementById('codeBlock');
                   codeBlock.textContent = content;
                   // 高亮代码
-                  Prism.highlightElement(codeBlock.querySelector('code'));
+                  Prism.highlightElement(codeBlock);
                 })
                 .catch(error => {
                   console.error('加载脚本内容失败:', error);
@@ -165,25 +165,8 @@
     });
 
     // 复制代码功能
-    document.getElementById('copyButton').addEventListener('click', () => {
-      const codeBlock = document.getElementById('codeBlock');
-      const textArea = document.createElement('textarea');
-      textArea.value = codeBlock.textContent;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-
-      // 显示复制成功提示
-      const originalText = document.getElementById('copyButton').innerHTML;
-      document.getElementById('copyButton').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><polyline points="20 6 9 17 4 12"></polyline></svg>复制成功';
-      setTimeout(() => {
-        document.getElementById('copyButton').innerHTML = originalText;
-      }, 2000);
-    });
-
-    // 复制代码功能
-    document.getElementById('copyButton').addEventListener('click', () => {
+    const copyButton = document.getElementById('copyButton');
+    copyButton.addEventListener('click', () => {
       const codeBlock = document.getElementById('codeBlock');
       const textArea = document.createElement('textarea');
       textArea.value = codeBlock.textContent;
@@ -194,7 +177,7 @@
       
       // 显示复制成功提示
       const originalText = copyButton.innerHTML;
-      copyButton.innerHTML = '已复制！';
+      copyButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><polyline points="20 6 9 17 4 12"></polyline></svg>已复制！';
       copyButton.classList.add('copied');
       setTimeout(() => {
         copyButton.innerHTML = originalText;
