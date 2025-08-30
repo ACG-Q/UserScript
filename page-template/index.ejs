@@ -1,54 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UserScript Repository</title>
+  <title>油猴脚本库</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="script.js" defer></script>
 </head>
-<body>
+<body class="bg-gray-50">
   <div class="container">
-    <header>
-      <h1>UserScript Repository</h1>
-      <input type="text" id="searchBox" placeholder="Search scripts..." class="search-box">
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+      <div class="header-content">
+        <h1>油猴脚本库</h1>
+        <p class="subtitle">便捷、高效的用户脚本集合</p>
+      </div>
+      <div class="search-container">
+        <input type="text" id="searchBox" placeholder="搜索脚本..." class="search-box">
+        <select id="filterSelect" class="filter-select">
+          <option value="all">全部脚本</option>
+          <option value="recent">最近添加</option>
+          <option value="popular">热门脚本</option>
+        </select>
+      </div>
     </header>
 
     <main id="mainContent">
-      <!-- 首页内容 -->
-      <table id="userScripts">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Author</th>
-            <th>Version</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="scriptList">
-          <% scripts.forEach((script, index) => { %>
-            <tr class="script-row" data-script-id="<%= script.id %>">
-              <td><%= index + 1 %></td>
-              <td>
-                <a href="detail-<%= script.id %>.html" class="script-link">
-                  <% if (script.icon) { %>
-                    <img src="<%= script.icon %>" alt="Icon" class="icon">
-                  <% } %>
-                  <%= script.name %>
-                </a>
-              </td>
-              <td class="description" title="<%= script.description %>"><%= script.description %></td>
-              <td><%= script.author %></td>
-              <td><%= script.version %></td>
-              <td><a href="<%= script.downloadLink %>" class="download-link">Add</a></td>
-            </tr>
-          <% }); %>
-        </tbody>
-      </table>
+      <!-- 脚本统计信息 -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <span class="stat-number"><%= scripts.length %></span>
+          <span class="stat-label">脚本总数</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">10+</span>
+          <span class="stat-label">分类</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">1000+</span>
+          <span class="stat-label">累计下载</span>
+        </div>
+      </div>
+
+      <!-- 脚本卡片列表 -->
+      <div id="scriptGrid" class="script-grid">
+        <% scripts.forEach((script) => { %> 
+          <div class="script-card" data-script-id="<%= script.id %>">
+            <div class="card-header">
+              <% if (script.icon) { %>
+                <img src="<%= script.icon %>" alt="Icon" class="card-icon">
+              <% } else { %>
+                <div class="card-icon-placeholder">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </div>
+              <% } %>
+              <h3 class="card-title"><%= script.name %></h3>
+            </div>
+            <div class="card-body">
+              <p class="card-description" title="<%= script.description %>"><%= script.description %></p>
+              <div class="card-meta">
+                <span class="meta-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  <%= script.author || '未知' %>
+                </span>
+                <span class="meta-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                  <%= script.version || '1.0' %>
+                </span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="detail-<%= script.id %>.html" class="detail-link">查看详情</a>
+              <a href="<%= script.downloadLink %>" class="download-link" target="_blank">添加脚本</a>
+            </div>
+          </div>
+        <% }); %>
+      </div>
     </main>
+
+    <footer class="footer">
+      <p>© 2025 油猴脚本库 - 所有脚本仅供学习使用</p>
+    </footer>
   </div>
 </body>
 </html>

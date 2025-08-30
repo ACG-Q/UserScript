@@ -7,7 +7,8 @@
     "format": "prettier --write scripts/*.js",
     "extract-metadata": "node extract-metadata.js",
     "generate-page": "node generate-page.js",
-    "build": "npm run format && npm run extract-metadata && npm run generate-page"
+    "generate-thirdparty-data": "node generate-thirdparty-data.js",
+    "build": "npm run format && npm run extract-metadata && npm run generate-page && npm run generate-thirdparty-data"
   },
   "repository": {
     "type": "git",
