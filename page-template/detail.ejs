@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= script.name %> - 油猴脚本库</title>
+  <title>脚本详情 - 油猴脚本库</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,20 +22,16 @@
       <!-- 脚本头部信息 -->
       <div class="script-header">
         <div class="script-header-left">
-          <% if (script.icon) { %>
-            <img src="<%= script.icon %>" alt="Icon" class="script-icon">
-          <% } else { %>
-            <div class="script-icon-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-            </div>
-          <% } %>
+          <div id="scriptIconContainer" class="script-icon-placeholder">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </div>
           <div class="script-info">
-            <h2 id="detailTitle"><%= script.name %></h2>
-            <p class="script-description"><%= script.description %></p>
+            <h2 id="detailTitle"></h2>
+            <p class="script-description" id="detailDescription"></p>
           </div>
         </div>
         <div class="script-actions">
-          <a href="<%= script.downloadLink %>" class="download-button" target="_blank">
+          <a id="downloadLink" class="download-button" target="_blank">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
             安装脚本
           </a>
@@ -45,31 +41,27 @@
       <!-- 脚本元数据 -->
       <div class="metadata-section">
         <h3>脚本信息</h3>
-        <div class="metadata-grid">
+        <div class="metadata-grid" id="metadataGrid">
           <div class="metadata-item">
             <span class="metadata-label">作者</span>
-            <span class="metadata-value"><%= script.author || '未知' %></span>
+            <span class="metadata-value" id="detailAuthor"></span>
           </div>
           <div class="metadata-item">
             <span class="metadata-label">版本</span>
-            <span class="metadata-value"><%= script.version || '1.0' %></span>
+            <span class="metadata-value" id="detailVersion"></span>
           </div>
           <div class="metadata-item">
             <span class="metadata-label">更新时间</span>
-            <span class="metadata-value"><%= new Date().toLocaleDateString() %></span>
+            <span class="metadata-value" id="detailUpdated"></span>
           </div>
-          <% if (script.match) { %>
-          <div class="metadata-item">
+          <div class="metadata-item" id="matchContainer" style="display: none;">
             <span class="metadata-label">匹配网址</span>
-            <span class="metadata-value break-all"><%= Array.isArray(script.match) ? script.match.join("<br>") : script.match %></span>
+            <span class="metadata-value break-all" id="detailMatch"></span>
           </div>
-          <% } %>
-          <% if (script.grant) { %>
-          <div class="metadata-item">
+          <div class="metadata-item" id="grantContainer" style="display: none;">
             <span class="metadata-label">权限</span>
-            <span class="metadata-value"><%= Array.isArray(script.grant) ? script.grant.join(", ") : script.grant %></span>
+            <span class="metadata-value" id="detailGrant"></span>
           </div>
-          <% } %>
         </div>
       </div>
 
@@ -82,7 +74,7 @@
             复制代码
           </button>
         </div>
-        <pre id="codeBlock" class="code-block"><code class="language-javascript"><%= script.content %></code></pre>
+        <pre id="codeBlock" class="code-block"><code class="language-javascript">加载中...</code></pre>
       </div>
     </main>
 
@@ -93,10 +85,101 @@
 
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+  <script src="script.js"></script>
   <script>
     // 返回首页
     document.getElementById('backButton').addEventListener('click', () => {
-      window.history.back();
+      window.location.href = 'index.html';
+    });
+
+    // 页面加载完成后初始化详情页
+    document.addEventListener('DOMContentLoaded', () => {
+      // 获取URL中的脚本ID参数
+      const urlParams = new URLSearchParams(window.location.search);
+      const scriptId = urlParams.get('id');
+
+      if (scriptId) {
+        // 从metadata.json加载脚本数据
+        fetch('metadata.json')
+          .then(response => response.json())
+          .then(scripts => {
+            // 查找对应的脚本
+            const script = scripts.find(s => s.id === scriptId);
+            if (script) {
+              // 填充脚本详情
+              document.title = `${script.name} - 油猴脚本库`;
+              document.getElementById('detailTitle').textContent = script.name;
+              document.getElementById('detailDescription').textContent = script.description || '暂无描述';
+              document.getElementById('detailAuthor').textContent = script.author || '未知';
+              document.getElementById('detailVersion').textContent = script.version || '1.0';
+              document.getElementById('detailUpdated').textContent = new Date(script.updated || Date.now()).toLocaleDateString();
+              document.getElementById('downloadLink').href = script.url || '#';
+              document.getElementById('downloadLink').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>安装脚本';
+
+              // 处理图标
+              const iconContainer = document.getElementById('scriptIconContainer');
+              if (script.icon) {
+                iconContainer.innerHTML = `<img src="${script.icon}" alt="Icon" class="script-icon">`;
+              }
+
+              // 处理匹配网址
+              if (script.match) {
+                const matchContainer = document.getElementById('matchContainer');
+                const matchValue = document.getElementById('detailMatch');
+                matchContainer.style.display = 'block';
+                matchValue.innerHTML = Array.isArray(script.match) ? script.match.join('<br>') : script.match;
+              }
+
+              // 处理权限
+              if (script.grant) {
+                const grantContainer = document.getElementById('grantContainer');
+                const grantValue = document.getElementById('detailGrant');
+                grantContainer.style.display = 'block';
+                grantValue.textContent = Array.isArray(script.grant) ? script.grant.join(', ') : script.grant;
+              }
+
+              // 加载脚本内容
+              fetch(script.url)
+                .then(response => response.text())
+                .then(content => {
+                  const codeBlock = document.getElementById('codeBlock');
+                  codeBlock.textContent = content;
+                  // 高亮代码
+                  Prism.highlightElement(codeBlock.querySelector('code'));
+                })
+                .catch(error => {
+                  console.error('加载脚本内容失败:', error);
+                  document.getElementById('codeBlock').textContent = '加载脚本内容失败: ' + error.message;
+                });
+            } else {
+              document.getElementById('detailContent').innerHTML = '<div class="error-message"><h3>未找到脚本</h3><p>请求的脚本不存在或已被删除。</p></div>';
+            }
+          })
+          .catch(error => {
+            console.error('加载元数据失败:', error);
+            document.getElementById('detailContent').innerHTML = '<div class="error-message"><h3>加载失败</h3><p>无法加载脚本数据，请稍后再试。</p></div>';
+          });
+      } else {
+        document.getElementById('detailContent').innerHTML = '<div class="error-message"><h3>参数错误</h3><p>未指定脚本ID参数。</p></div>';
+      }
+    });
+
+    // 复制代码功能
+    document.getElementById('copyButton').addEventListener('click', () => {
+      const codeBlock = document.getElementById('codeBlock');
+      const textArea = document.createElement('textarea');
+      textArea.value = codeBlock.textContent;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+
+      // 显示复制成功提示
+      const originalText = document.getElementById('copyButton').innerHTML;
+      document.getElementById('copyButton').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><polyline points="20 6 9 17 4 12"></polyline></svg>复制成功';
+      setTimeout(() => {
+        document.getElementById('copyButton').innerHTML = originalText;
+      }, 2000);
     });
 
     // 复制代码功能
