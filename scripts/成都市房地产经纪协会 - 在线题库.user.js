@@ -1,11 +1,12 @@
 // ==UserScript==
-// @name         在线题库
+// @name         成都市房地产经纪协会 - 在线题库
 // @match        http://cdeaa.com/UserCourse/CourseShow*
+// @match        https://cdeaa.com/UserCourse/CourseShow*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @version      1.0
-// @author       -
-// @description  2025-08-27 在线题库（本地JSON版）
+// @author       六记
+// @description  2025-10-26 更新脚本
 // ==/UserScript==
 
 /**
@@ -28,7 +29,7 @@
       autoAnswer: GM_getValue('autoAnswer', true),
       showStatus: GM_getValue('showStatus', true),
       // 本地JSON文件的相对路径
-      localJsonPath: GM_getValue('localJsonPath', 'https://gh-proxy.com/https://github.com/ACG-Q/UserScript/raw/refs/heads/main/questions1.json'),
+      localJsonPath: GM_getValue('localJsonPath', 'https://gh-proxy.com/https://github.com/ACG-Q/UserScript/raw/refs/heads/main/questions.json'),
       // 题目信息窗口位置配置
       infoWindowPosition: GM_getValue('infoWindowPosition', 'bottom-right'), // 可选值: top-left, top-right, bottom-left, bottom-right
       showInfoWindow: GM_getValue('showInfoWindow', true) // 是否显示题目信息窗口
@@ -336,7 +337,8 @@
 
         // 如果搜索已暂停，则直接返回
         if (ConfigManager.state.searchPaused) {
-          ConfigManager.state.status = '搜索已暂停（达到最大重试次数）';
+          const hasAnswer = ConfigManager.state.lastAnswer && ConfigManager.state.lastAnswer !== '';
+          ConfigManager.state.status = hasAnswer ? '已找到答案，搜索已暂停' : '未找到答案，搜索已暂停';
           UIManager.updateStatus();
           return;
         }
@@ -553,7 +555,7 @@
       content += `<div style="margin-bottom: 10px; font-weight: bold;">题目：${displayTitle}</div>`;
 
       // 添加搜索结果列表标题
-      content += `<div style="margin-bottom: 5px; font-weight: bold; color: #2196F3;">搜索结果 (可信度 >= 0.75)：</div>`;
+      content += `<div style="margin-bottom: 5px; font-weight: bold; color: #2196F3;">搜索结果 (列出匹配度 > 75%)：</div>`;
 
       // 检查是否有多个匹配结果
       const results = QuestionBank.queryAnswer(question.title);
@@ -568,7 +570,7 @@
             content += `<div style="margin-bottom: 8px; padding: 5px; border: 1px solid #eee; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">`;
             content += `<div style="flex: 1;">`;
             content += `<div style="margin-bottom: 2px;"><span style="font-weight: bold;">结果 ${index + 1}：</span>${displayAnswer}</div>`;
-            content += `<div style="font-size: 10px; color: #666;">可信度: ${similarityPercentage}%</div>`;
+            content += `<div style="font-size: 10px; color: #666;">匹配度: ${similarityPercentage}%</div>`;
             content += `</div>`;
             // 添加切换按钮
             content += `<button class="switch-answer-btn" data-answer="${displayAnswer}" data-index="${index}" style="margin-left: 5px; padding: 3px 8px; background: #409eff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">切换</button>`;
@@ -992,9 +994,13 @@
                   source: location.href
                 };
 
-                // 检查是否未搜索到题目（搜索已暂停且达到最大重试次数）
-                if (ConfigManager.state.searchPaused && ConfigManager.state.retryCount === 0) {
-                  // 创建弹窗
+                // 只有在确实未搜索到答案时才弹窗
+                const searchResults = QuestionBank.queryAnswer(question.title);
+                const hasValidAnswer = searchResults && searchResults.length > 0 &&
+                                     searchResults[0].similarity >= 0.75;
+
+                if (!hasValidAnswer) {
+                  // 只有当题库中没有找到有效答案时才显示弹窗
                   this.createAnswerNotFoundDialog(output);
                 }
 
@@ -1105,9 +1111,16 @@
          border-radius: 4px;
          cursor: pointer;
        `;
-      closeBtn.onclick = () => {
-        dialog.remove();
+
+      // 统一的关闭函数
+      const closeDialog = () => {
+        const dialog = document.getElementById('quiz-autopilot-not-found-dialog');
+        const overlay = document.getElementById('quiz-autopilot-overlay');
+        if (dialog) dialog.remove();
+        if (overlay) overlay.remove();
       };
+
+      closeBtn.onclick = closeDialog;
 
       btnContainer.appendChild(copyBtn);
       btnContainer.appendChild(closeBtn);
@@ -1125,10 +1138,7 @@
          background: rgba(0,0,0,0.5);
          z-index: 9998;
        `;
-      overlay.onclick = () => {
-        dialog.remove();
-        overlay.remove();
-      };
+      overlay.onclick = closeDialog
 
       document.body.appendChild(overlay);
       document.body.appendChild(dialog);
